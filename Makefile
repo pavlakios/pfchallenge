@@ -10,7 +10,7 @@ goapp:
 
 .PHONY: gorun
 gorun:
-	go run ./...
+	go run cmd/server/main.go
 
 .PHONY: clean
 clean:
@@ -35,3 +35,8 @@ ws/goapp:
 	 --header "Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==" \
 	 --header "Sec-WebSocket-Version: 13" \
 	 http://localhost:8080/goapp/ws
+
+.PHONY: cli/sessions
+cli/sessions:
+	make goapp
+	bin/cli sessions -n 5
