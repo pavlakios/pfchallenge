@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	goapp "goapp/internal/app/server"
+	"goapp/pkg/debug"
 )
 
 func init() {
@@ -19,7 +20,7 @@ func init() {
 func main() {
 	// Debug.
 	go func() {
-		log.Println(http.ListenAndServe(":6060", nil))
+		log.Println(http.ListenAndServe(":6060", debug.Mux()))
 	}()
 
 	// Register signal handlers for exiting
