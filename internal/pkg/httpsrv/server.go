@@ -10,9 +10,12 @@ import (
 
 	"goapp/internal/pkg/watcher"
 
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
+
+const csrfKey string = "6a1f92c1c29e75e7316c91c48d5b3b9e4ab3c5d8f13f58e26a14cf84321b5e7c"
 
 type Server struct {
 	strChan      <-chan string               // String channel.
@@ -39,6 +42,7 @@ func New(strChan <-chan string) *Server {
 func (s *Server) Start() error {
 	// Create router.
 	r := mux.NewRouter()
+	csrfMiddleware := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
 
 	// Register routes.
 	for _, route := range s.myRoutes() {
@@ -58,7 +62,7 @@ func (s *Server) Start() error {
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		IdleTimeout:  10 * time.Second,
-		Handler:      handlers.CombinedLoggingHandler(os.Stdout, r),
+		Handler:      csrfMiddleware(handlers.CombinedLoggingHandler(os.Stdout, r)),
 	}
 
 	// Start HTTP server.

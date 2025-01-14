@@ -24,9 +24,10 @@ func (s *Server) handlerWebSocket(w http.ResponseWriter, r *http.Request) {
 	defer s.removeWatcher(watch)
 
 	// Start WS.
-	var upgrader = websocket.Upgrader{
+	var upgrader = websocket.Upgrader{ //check here for origin
 		CheckOrigin: func(r *http.Request) bool {
-			return true
+			origin := r.Header.Get("Origin")
+			return origin == "http://localhost:8080"
 		},
 	}
 
