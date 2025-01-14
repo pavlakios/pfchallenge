@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/arl/statsviz v0.6.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/gorilla/csrf v1.7.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
