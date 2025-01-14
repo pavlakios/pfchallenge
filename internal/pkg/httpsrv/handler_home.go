@@ -3,6 +3,8 @@ package httpsrv
 import (
 	"html/template"
 	"net/http"
+
+	"github.com/gorilla/csrf"
 )
 
 func (s *Server) handlerHome(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +28,7 @@ window.addEventListener("load", function(evt) {
         if (ws) {
             return false;
         }
-        ws = new WebSocket("{{.}}");
+        ws = new WebSocket("{{.WebSocketURL}}");
         ws.onopen = function(evt) {
             print("OPEN");
         }
@@ -68,6 +70,7 @@ window.addEventListener("load", function(evt) {
 You can change the message and send multiple times.
 <p>
 <form>
+{{.csrfField}}
 <button id="open">Open</button>
 <button id="close">Close</button>
 <p><input id="input" type="text" value="{}">
@@ -78,5 +81,8 @@ You can change the message and send multiple times.
 </td></tr></table>
 </body>
 </html>
-`)).Execute(w, "ws://"+r.Host+"/goapp/ws")
+`)).Execute(w, map[string]interface{}{
+		"WebSocketURL":   "ws://" + r.Host + "/goapp/ws",
+		csrf.TemplateTag: csrf.TemplateField(r),
+	})
 }
