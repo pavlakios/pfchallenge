@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"net/url"
 	"os"
 	"strconv"
@@ -14,6 +15,9 @@ import (
 // Sessions open sessions simultaneously.
 func Sessions() {
 	wsURL := "ws://localhost:8080/goapp/ws"
+	wsHeader := http.Header{}
+	wsHeader.Add("Origin", "http://localhost:8080")
+
 	numConnections, err := strconv.Atoi(os.Args[3])
 	if err != nil || numConnections <= 0 {
 		log.Fatalf("Invalid number of connections: %s", os.Args[3])
@@ -33,7 +37,7 @@ func Sessions() {
 				return
 			}
 
-			conn, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+			conn, _, err := websocket.DefaultDialer.Dial(u.String(), wsHeader)
 			if err != nil {
 				log.Printf("[conn #%d]: Failed to connect - %v", connID, err)
 				return
@@ -67,5 +71,4 @@ func Sessions() {
 	wg.Wait()
 	log.Println("All WebSocket connections completed.")
 
-	return
 }

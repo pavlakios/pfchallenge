@@ -39,4 +39,4 @@ ws/goapp:
 .PHONY: cli/sessions
 cli/sessions:
 	make goapp
-	bin/cli sessions -n 5
+	bin/cli sessions -n 1000
